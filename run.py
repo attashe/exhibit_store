@@ -205,7 +205,7 @@ def send_css(path):
 @app.route('/update_db/', methods=['POST'])
 def update_db():
     load_imgs_from_db()
-    return None
+    return ""
 
 
 if __name__ == '__main__':
