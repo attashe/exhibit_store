@@ -1,3 +1,5 @@
 Flask
 flask_socketio
 schedule
+gevent
+gevent-websocket

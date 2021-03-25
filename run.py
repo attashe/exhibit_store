@@ -20,7 +20,7 @@ import shutil
 import schedule
 import time
 import subprocess
-import distutils
+from distutils.dir_util import copy_tree
 
 from multiprocessing import Process
 
@@ -54,8 +54,8 @@ def job():
     subprocess.run(command_yolo)
 
     shutil.rmtree('imgs')
-    distutils.dir_util.copy_tree('./inference/img', './predict/')
-    distutils.dir_util.copy_tree('./inference/json', './predict/')
+    copy_tree('./inference/img', './predict/')
+    copy_tree('./inference/json', './predict/')
     print('job was run')
 
 #schedule.every().hour.do(job)
