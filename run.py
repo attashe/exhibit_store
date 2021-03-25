@@ -54,7 +54,8 @@ def job():
     subprocess.run(command_yolo)
 
     shutil.rmtree('imgs')
-    distutils.dir_util.copy_tree('./inference', './predict')
+    distutils.dir_util.copy_tree('./inference/img', './predict/')
+    distutils.dir_util.copy_tree('./inference/json', './predict/')
     print('job was run')
 
 #schedule.every().hour.do(job)
@@ -148,9 +149,10 @@ def load_imgs_from_db():
     #         count += 1
     #         if count == length:
     #             break
-
-    imgs = list(sorted(os.listdir('predict/img')))
-    imgs = imgs[:length]
+    path = 'predict/img'
+    if os.path.exists(path):
+        imgs = list(sorted(os.listdir(path)))
+        imgs = imgs[:length]
 
 
 def update_emails():
