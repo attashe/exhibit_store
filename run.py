@@ -32,14 +32,14 @@ app = Flask(__name__, static_folder='./static')
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
-
+# python3 ../yolov5/inference_folder.py --source imgs/ --weights ../yolov5/runs/exp80/weights/best.pt --conf 0.45 --output inference/ --augment --agnostic-nms --save-result
 command_yolo = [
     'python3',
     '../yolov5/inference_folder.py',
     '--source', 'imgs/',
     '--weights', '../yolov5/runs/exp80/weights/best.pt',
     '--conf', '0.45',
-    '--output', 'inference/'
+    '--output', 'inference/',
     '--augment',
     '--agnostic-nms',
     '--save-result',
@@ -54,8 +54,8 @@ def job():
     subprocess.run(command_yolo)
 
     shutil.rmtree('imgs')
-    copy_tree('./inference/img', './predict/')
-    copy_tree('./inference/json', './predict/')
+    copy_tree('./inference/img/', './predict/img/')
+    shutil.copy('./inference/objects.csv', './predict/')
     print('job was run')
 
 #schedule.every().hour.do(job)
@@ -149,10 +149,11 @@ def load_imgs_from_db():
     #         count += 1
     #         if count == length:
     #             break
-    path = 'predict/img'
+    path = 'predict/img/'
     if os.path.exists(path):
         imgs = list(sorted(os.listdir(path)))
         imgs = imgs[:length]
+        logger.info(f'Images {imgs} was added as preview')
 
 
 def update_emails():

@@ -319,7 +319,7 @@ if __name__ == "__main__":
 
     # get emails from db
     logger.info('Opening database')
-    db_emails = load_db_emails(args.database)
+    # db_emails = load_db_emails(args.database)
 
     with shelve.open('emails_store.shelve') as store:
         # check new emails
