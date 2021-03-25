@@ -1,0 +1,3 @@
+image_folder: ./images
+database_folder: ./db
+log_folder: ./logs

@@ -1,0 +1,79 @@
+body {
+    background-color: lightblue;
+    margin: 0;
+    padding: 0;
+}
+
+div {
+    background-color: lightyellow;
+}
+
+.content {
+    display: grid;
+    grid-template-areas: "header header"
+                       "left main"  
+                       "bottom bottom";
+    height: 100vh;
+    width: 100%;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 80px minmax(200px, 1fr) 50px;
+}
+
+.block {
+    border: 5px solid rgba(123, 123, 123, 0.35);
+    border-radius: 17px;
+}
+
+.header {
+    display: flex ;
+    grid-area: header;
+}
+
+.main {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+}
+
+.main img {
+    /* width: 100%; */
+    height: 100%;
+}
+
+.view {
+    height: max(350px, 70%);
+}
+
+.carousel {
+    height: maxmin(300px, 20%);
+    width: 100%;
+}
+
+.left {
+    grid-area: left;
+}
+
+.bottom {
+    grid-area: bottom;
+}
+
+.logo {
+    flex: 1;
+}
+
+.top {
+    flex: 5;
+}
+
+.carousel-item {
+    /* width: 300px; */
+    height: 200px;
+    background-color: coral;
+    border: dashed rgba(0, 0, 0, 1);
+    text-align: center;
+}
+
+.carousel-item > img {
+    width: 100%;
+    height: 100%;
+}

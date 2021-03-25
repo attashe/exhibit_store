@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hunting camera</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" href="/css/tiny-slider.css">
+    <script src="/js/socket.io.js" crossorigin="anonymous"></script>
+    <script src="/js/plotly.min.js" type="text/javascript"></script>
+    <script src="/js/tiny-slider.js"></script>
+</head>
+<body>
+
+<div class="content">
+    <div class="block header">
+        <div class="block logo">Logo</div>
+        <div class="block top">Top
+            <p id="user_id"></p>
+        </div>
+    </div>
+    <div class="block main">
+        <div class="block view">Main view
+            <img id="main_image" class="cat-image" src="/imgs/cat.jpg">
+        </div>
+        <div class="block carousel">Corousel
+                <div class="my-slider">
+                        <div id='0' class="carousel-item"><img class="cat-image" src="/imgs/0/preview.jpg"></div>
+                        <div id='1' class="carousel-item"><img class="cat-image" src="/imgs/1/preview.jpg"></div>
+                        <div id='2' class="carousel-item"><img class="cat-image" src="/imgs/2/preview.jpg"></div>
+                        <div id='3' class="carousel-item"><img class="cat-image" src="/imgs/3/preview.jpg"></div>
+                        <div id='4' class="carousel-item"><img class="cat-image" src="/imgs/4/preview.jpg"></div>
+                        <div id='5' class="carousel-item"><img class="cat-image" src="/imgs/5/preview.jpg"></div>
+                        <div id='6' class="carousel-item"><img class="cat-image" src="/imgs/6/preview.jpg"></div>
+                        <div id='7' class="carousel-item"><img class="cat-image" src="/imgs/7/preview.jpg"></div>
+                        <div id='8' class="carousel-item"><img class="cat-image" src="/imgs/8/preview.jpg"></div>
+                </div>
+        </div>
+    </div>
+    <div class="block left">Left</div>
+    <div class="block bottom">Bottom</div>
+</div>
+<!-- <canvas id="canvas" width="1000px" height="1000px"></canvas> -->
+
+
+<script name="utils">
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
+}
+</script>
+
+<script name="authorization">
+var username = 'user' + getRandomInt(0, 123124123);
+// userId Visualization
+user_id.innerHTML = username
+var socket = io();
+socket.on('connect', function() {
+    socket.emit('login', {username: username});
+});
+socket.on('message', function(data) {
+    data = JSON.parse(data);
+    console.log(data.username + ': ', data.message);
+});
+</script>
+
+<script>
+
+function getRandomId(id) {
+    return '/imgs/' + id + '/cat.jpg' + '?' + getRandomInt(0, 12312312)
+}
+
+// Update image script
+function getImage(elem) {
+    socket.emit('set_main', 
+        {'id': elem.id, 'username': username},
+        function() {
+          main_image.src = getRandomId(elem.id)
+        }
+    );
+    return;
+}
+</script>
+
+<script>
+// Carousel script
+
+params = {
+  "container": ".my-slider",
+  "loop": false,
+  "autoHeight": true,
+  "mouseDrag": true,
+  'items': 5,
+  "edgePadding": 30,
+  "autoplay": true,
+  "arrowKeys": true,
+  // 'center': true,
+  // "slideBy": "page",
+  "swipeAngle": false,
+  "speed": 400
+}
+
+var slider = tns(params)
+
+for (let elem of document.getElementsByClassName("carousel-item")) {
+    elem.onclick = function() {
+        getImage(elem);
+        console.log(elem.innerHTML);
+    };
+}
+console.log('Slider was initialized')
+</script>
+
+<script name="server_update">
+socket.on('set_state', function(data) {
+    state = JSON.parse(data);
+    console.log(state)
+});
+
+setInterval(function(){
+    // console.log('Go tick!');
+    // socket.emit('tick', {'username': username, 'command': command});
+    // command = null
+    // socket.emit('get_state');
+    fetch('/update_db/', { method: 'POST' })
+}, 5000);
+// Force to reload all cached css
+(function() {
+  var h, a, f;
+  a = document.getElementsByTagName('link');
+  for (h = 0; h < a.length; h++) {
+    f = a[h];
+    if (f.rel.toLowerCase().match(/stylesheet/) && f.href) {
+      var g = f.href.replace(/(&|\?)rnd=\d+/, '');
+      f.href = g + (g.match(/\?/) ? '&' : '?');
+      f.href += 'rnd=' + (new Date().valueOf());
+    }
+  } // for
+})()
+</script>
+</body>
+</html>

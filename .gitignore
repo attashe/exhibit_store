@@ -1,0 +1,16 @@
+.ipynb_checkpoints
+.vscode
+__pycache__/
+
+*.log
+*.zip
+*.db
+*.shelve
+
+imgs/
+predict/
+inference/
+emails/
+downloads/
+
+.credentials.yaml
