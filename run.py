@@ -127,7 +127,7 @@ def get_preview(number):
     path = Path('./predict/img/')
 
     logger.debug(imgs)
-    logger.debug(path / imgs[number]))
+    logger.debug(path / imgs[number])
 
     img = cv2.imread(str(path / imgs[number]))
     h, w = img.shape[:2]
