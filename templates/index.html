@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
+    <meta charset="windows-1251">
     <title>Hunting camera</title>
+    <link rel="icon" type="image/png" href="/static/favicon.png"/>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <link rel="stylesheet" href="/css/tiny-slider.css">
     <script src="/js/socket.io.js" crossorigin="anonymous"></script>
@@ -13,8 +14,11 @@
 
 <div class="content">
     <div class="block header">
-        <div class="block logo">Logo</div>
-        <div class="block top">Top
+        <div class="block logo">
+            <img src='static/logo.png'>
+        </div>
+        <div class="block top">
+            <p id="system_name" lang="ru">Автономная система интеллектуального визуального контроля</p>
             <p id="user_id"></p>
         </div>
     </div>
@@ -27,7 +31,7 @@
 </div></div>
             </div>
         </div>
-        <div class="block carousel">Corousel
+        <div class="block carousel">
                 <div class="my-slider">
                         <div id='0' class="carousel-item"><img class="cat-image" src="/imgs/0/preview.jpg"></div>
                         <div id='1' class="carousel-item"><img class="cat-image" src="/imgs/1/preview.jpg"></div>
@@ -38,11 +42,30 @@
                         <div id='6' class="carousel-item"><img class="cat-image" src="/imgs/6/preview.jpg"></div>
                         <div id='7' class="carousel-item"><img class="cat-image" src="/imgs/7/preview.jpg"></div>
                         <div id='8' class="carousel-item"><img class="cat-image" src="/imgs/8/preview.jpg"></div>
+                        <div id=9 class="carousel-item"><img class="cat-image" src="/imgs/9/preview.jpg"></div>
+                        <div id=10 class="carousel-item"><img class="cat-image" src="/imgs/10/preview.jpg"></div>
+                        <div id=11 class="carousel-item"><img class="cat-image" src="/imgs/11/preview.jpg"></div>
+                        <div id=12 class="carousel-item"><img class="cat-image" src="/imgs/12/preview.jpg"></div>
+                        <div id=13 class="carousel-item"><img class="cat-image" src="/imgs/13/preview.jpg"></div>
+                        <div id=14 class="carousel-item"><img class="cat-image" src="/imgs/14/preview.jpg"></div>
+                        <div id=15 class="carousel-item"><img class="cat-image" src="/imgs/15/preview.jpg"></div>
+                        <div id=16 class="carousel-item"><img class="cat-image" src="/imgs/16/preview.jpg"></div>
+                        <div id=17 class="carousel-item"><img class="cat-image" src="/imgs/17/preview.jpg"></div>
+                        <div id=18 class="carousel-item"><img class="cat-image" src="/imgs/18/preview.jpg"></div>
+                        <div id=19 class="carousel-item"><img class="cat-image" src="/imgs/19/preview.jpg"></div>
+                        <div id=20 class="carousel-item"><img class="cat-image" src="/imgs/20/preview.jpg"></div>
+                        <div id=21 class="carousel-item"><img class="cat-image" src="/imgs/21/preview.jpg"></div>
+                        <div id=22 class="carousel-item"><img class="cat-image" src="/imgs/22/preview.jpg"></div>
+                        <div id=23 class="carousel-item"><img class="cat-image" src="/imgs/23/preview.jpg"></div>
+                        <div id=24 class="carousel-item"><img class="cat-image" src="/imgs/24/preview.jpg"></div>
                 </div>
         </div>
     </div>
     <div class="block left">Left</div>
-    <div class="block bottom">Bottom</div>
+    <div class="block bottom">
+        <p id="log">Result</p>
+        <!-- <textarea id="log" readonly cols="200" rows="3"></textarea>  -->
+    </div>
 </div>
 <!-- <canvas id="canvas" width="1000px" height="1000px"></canvas> -->
 
@@ -51,7 +74,7 @@
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min; //РњР°РєСЃРёРјСѓРј РЅРµ РІРєР»СЋС‡Р°РµС‚СЃСЏ, РјРёРЅРёРјСѓРј РІРєР»СЋС‡Р°РµС‚СЃСЏ
+  return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
 }
 </script>
 
@@ -72,7 +95,7 @@ socket.on('message', function(data) {
 <script>
 
 function getRandomId(id) {
-    return '/imgs/' + id + '/cat.jpg' + '?' + getRandomInt(0, 12312312)
+    return '/imgs/' + id + '/cat.jpg' + '?' + getRandomInt(0, 12312312);
 }
 
 // Update image script
@@ -85,12 +108,25 @@ function getImage(elem) {
     );
     return;
 }
+
+//Update Log
+socket.on('add_log', function(data) {
+    state = JSON.parse(data);
+    console.log('Add logging');
+    console.log(state);
+    let s = ''
+    for (let obj of state['objects']) {
+        console.log(obj)
+        s += obj[0]['class'] + ', '
+    }
+    log.innerHTML = s  // JSON.stringify(state);
+});
 </script>
 
 <script>
 // Carousel script
 
-params = {
+/* params = {
   "container": ".my-slider",
   "loop": false,
   "autoHeight": true,
@@ -105,7 +141,7 @@ params = {
   "speed": 400
 }
 
-var slider = tns(params)
+var slider = tns(params) */
 
 for (let elem of document.getElementsByClassName("carousel-item")) {
     elem.onclick = function() {

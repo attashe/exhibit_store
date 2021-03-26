@@ -210,29 +210,44 @@ def tick(data):
     """
     data = {
         username: str,
-        main: str,
+        id: str(int),
     }
     """
     user = data['username']
     logger.info(f'{user} set main to {data["id"]}')
     users_dict[user].main_id = data['id']
     logger.debug(users_dict[user])
+    add_log(int(data["id"]))
+
+
+def add_log(index):
+    name, ext = os.path.splitext(imgs[index])
+    filename = Path('predict/json') / (name + '.json')
+    if not filename.exists():
+        return
+    with open(filename, 'r') as f:
+        log = json.load(f)
+    emit('add_log', json.dumps(log))
 
 
 @app.route('/js/<path:path>', methods=['GET'])
 def send_js(path):
-    return send_from_directory('js', path ,mimetype='text/javascript')
+    return send_from_directory('js', path, mimetype='text/javascript')
 
 
 @app.route('/sourcemaps/<path:path>', methods=['GET'])
 def send_sourcemaps(path):
-    return send_from_directory('sourcemaps', path ,mimetype='text/javascript')
-
+    return send_from_directory('sourcemaps', path, mimetype='text/javascript')
 
 
 @app.route('/css/<path:path>', methods=['GET'])
 def send_css(path):
-    return send_from_directory('css', path ,mimetype='text/css')
+    return send_from_directory('css', path, mimetype='text/css')
+
+
+# @app.route('/static/<path:path>', methods=['GET'])
+# def send_static(path):
+#     return send_from_directory('static', path)
 
 
 @app.route('/update_db/', methods=['POST'])
