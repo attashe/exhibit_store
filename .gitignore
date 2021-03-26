@@ -5,12 +5,13 @@ __pycache__/
 *.log
 *.zip
 *.db
-*.shelve
+*.shelve*
 
 imgs/
 predict/
 inference/
 emails/
 downloads/
+jsons/
 
 credentials.yaml

@@ -19,8 +19,13 @@
         </div>
     </div>
     <div class="block main">
-        <div class="block view">Main view
+        <div class="block view">
             <img id="main_image" class="cat-image" src="/imgs/cat.jpg">
+            <div class="back-loader">
+                <div class="loadingio-spinner-spinner-3kciexrf6pu"><div class="ldio-jibe80mup1a">
+<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+</div></div>
+            </div>
         </div>
         <div class="block carousel">Corousel
                 <div class="my-slider">
@@ -122,8 +127,17 @@ setInterval(function(){
     // socket.emit('tick', {'username': username, 'command': command});
     // command = null
     // socket.emit('get_state');
-    fetch('/update_db/', { method: 'POST' })
-}, 5000);
+    fetch('/update_db/', { method: 'POST' }).then((data) => {
+        elems = document.getElementsByClassName('cat-image');
+        for (let elem of elems) {
+            let s = 'Src changed from ' + elem.src;
+            elem.src = elem.src.split('?')[0] + '?' + getRandomInt(0, 12312312);
+            s += ' to ' + elem.src;
+            console.log(s)
+        }
+
+    });
+}, 10000);
 // Force to reload all cached css
 (function() {
   var h, a, f;

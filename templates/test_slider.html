@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hunting camera</title>
+<style>
+.scrolling-wrapper {
+  display: flex;
+  {% comment %} flex-direction: column; {% endcomment %}
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.scrolling-wrapper {
+  -webkit-overflow-scrolling: touch;
+}
+
+.card {
+    flex: 0 0 auto;
+    width: 400px;
+    height: 300px;
+    background-color: red;
+    margin: 0 10px;
+}
+</style>
+</head>
+<body>
+
+<div class="scrolling-wrapper">
+  <div class="card"><h2>Card</h2></div>
+  <div class="card"><h2>Card</h2></div>
+  <div class="card"><h2>Card</h2></div>
+  <div class="card"><h2>Card</h2></div>
+  <div class="card"><h2>Card</h2></div>
+  <div class="card"><h2>Card</h2></div>
+  <div class="card"><h2>Card</h2></div>
+  <div class="card"><h2>Card</h2></div>
+  <div class="card"><h2>Card</h2></div>
+</div>
+
+</body>
+</html>

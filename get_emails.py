@@ -1,6 +1,7 @@
 import os
 import sys
 import yaml
+import json
 import email
 import shelve
 import sqlite3
@@ -137,6 +138,8 @@ def load_email():
     pass
 
 
+json_path = Path('jsons')
+json_path.mkdir(exist_ok=True)
 def load_emails(store, messages, target_folder='emails'):
     count_messages = int(messages[0])
     for i in range(count_messages, 0, -1):
@@ -151,6 +154,8 @@ def load_emails(store, messages, target_folder='emails'):
             if isinstance(response, tuple):
                 # parse a bytes email into a message object
                 msg = email.message_from_bytes(response[1])
+                date = msg['Date']
+                logger.info(f'Date {date} with type {type(date)}')
                 # decode the email subject
                 subject = decode_header(msg["Subject"])[0][0]
                 if isinstance(subject, bytes):
@@ -162,7 +167,15 @@ def load_emails(store, messages, target_folder='emails'):
                 print("From:", from_)
 
                 data = get_email_payload(subject, msg)
+                data['date'] = date
                 temp.append(data)
+                
+                if len(data['attach']) > 0:
+                    with open(json_path / f'{index}.json', 'w') as f:
+                        json.dump({
+                            'filename': data['attach'][0],
+                            'date': date,
+                            }, f)
         store[index] = temp
 
 

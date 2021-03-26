@@ -1,7 +1,9 @@
 import os, sys
 import json
 import time
+import email
 import shelve
+import datetime
 from pathlib import Path
 from typing import List, Dict
 from collections import namedtuple, OrderedDict
@@ -34,7 +36,7 @@ socketio = SocketIO(app)
 
 # python3 ../yolov5/inference_folder.py --source imgs/ --weights ../yolov5/runs/exp80/weights/best.pt --conf 0.45 --output inference/ --augment --agnostic-nms --save-result
 command_yolo = [
-    'python3',
+    'python',
     '../yolov5/inference_folder.py',
     '--source', 'imgs/',
     '--weights', '../yolov5/runs/exp80/weights/best.pt',
@@ -43,9 +45,10 @@ command_yolo = [
     '--augment',
     '--agnostic-nms',
     '--save-result',
+    '--save-json',
 ]
 
-command_email = 'python3 get_emails.py -c config.yaml'.split(' ')
+command_email = 'python get_emails.py -c config.yaml'.split(' ')
 
 
 def job():
@@ -57,8 +60,11 @@ def job():
     shutil.rmtree('imgs')
 
     if os.path.exists('inference'):
-        copy_tree('./inference/img/', './predict/img/')
-        shutil.copy('./inference/objects.csv', './predict/')
+        if os.path.exists('./inference/img/'):
+            copy_tree('./inference/img/', './predict/img/')
+        if os.path.exists('./inference/json/'):
+            copy_tree('./inference/json/', './predict/json/')
+            # shutil.copy('./inference/objects.csv', './predict/')
     logger.info('Job was run')
 
 #schedule.every().hour.do(job)
@@ -117,8 +123,11 @@ def get_img_by_id(img_id):
 def new_value():
     path = './emails/RAM:Cam001_20200928_1327.jpg/Cam001_20200928_1327.jpg'
     
-    _, res = cv2.imencode('.jpg', cv2.imread(str(path)))
-
+    # _, res = cv2.imencode('.jpg', cv2.imread(str(path)))
+    img = np.ones((100, 100, 4), dtype=np.uint8) * 255
+    img[..., 3] = 0
+    _, res = cv2.imencode('.png', img)
+    
     return res.tostring()
 
 
@@ -126,7 +135,7 @@ def new_value():
 def get_preview(number):
     path = Path('./predict/img/')
 
-    logger.debug(imgs)
+    # logger.debug(imgs)
     logger.debug(path / imgs[number])
 
     img = cv2.imread(str(path / imgs[number]))
@@ -141,6 +150,7 @@ emails_list = OrderedDict()
 
 imgs = []
 def load_imgs_from_db():
+    global imgs
     length = 9
     count = 0
     # with shelve.open('emails_store.shelve') as store:
@@ -155,11 +165,27 @@ def load_imgs_from_db():
     #         count += 1
     #         if count == length:
     #             break
-    path = 'predict/img/'
-    if os.path.exists(path):
-        imgs = list(sorted(os.listdir(path)))
-        imgs = imgs[:length]
-        logger.info(f'Images {imgs} was added as preview')
+    # path = 'predict/img/'
+    # if os.path.exists(path):
+    #     imgs = list(sorted(os.listdir(path), reverse=True))
+    #     imgs = imgs[:length]
+    #     logger.info(f'Images {imgs} was added as preview')
+    if not os.path.exists('predict/img/'):
+        return
+    
+    path = Path('jsons')
+    files = list(path.glob('*.json'))
+    parsed = []
+    for file in files:
+        # logger.info(f'Filename {file} parsing as JSON')
+        with open(file, 'r') as f:
+            d = json.load(f)
+        d['date'] = datetime.datetime.fromtimestamp(time.mktime(email.utils.parsedate(d['date'])))
+        parsed.append(d)
+    parsed = sorted(parsed, key=lambda x: x['date'], reverse=True)
+    imgs = [x['filename'] for x in parsed]
+    
+    logger.info(f'Images {imgs[:3]}... was added as preview')
 
 
 def update_emails():
@@ -218,4 +244,4 @@ def update_db():
 if __name__ == '__main__':
     start_process()
     load_imgs_from_db()
-    socketio.run(app, host='127.0.0.1', port=5001, debug=True)
+    socketio.run(app, host='127.0.0.1', port=5001, debug=False)
