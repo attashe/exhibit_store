@@ -126,6 +126,9 @@ def new_value():
 def get_preview(number):
     path = Path('./predict/img/')
 
+    logger.debug(imgs)
+    logger.debug(path / imgs[number]))
+
     img = cv2.imread(str(path / imgs[number]))
     h, w = img.shape[:2]
     new_h = 200
