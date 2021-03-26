@@ -32,9 +32,12 @@ def email_connect(username, password, server="imap.mail.ru"):
     return imap
 
 
-def get_emails(imap, post_folder="INBOX/ToMyself"):
+# post_folder="INBOX/ToMyself"
+def get_emails(imap, post_folder="INBOX"):
     status, messages = imap.select(post_folder)
-
+    logger.info(f'Status: {status}')
+    logger.info(f'Messages: {messages}')
+    print(imap.search(None, ) )
     return status, messages
 
 
@@ -217,7 +220,8 @@ def get_email_payload(subject, msg):
         data['body'].append(body)
     if content_type == "text/html":
         # if it's HTML, create a new HTML file and open it in browser
-        raise Exception("HTML format doesn't supporting")
+        logger.error("HTML format doesn't supporting")
+        # continue
     
     print(data)
     return data

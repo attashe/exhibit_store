@@ -50,13 +50,16 @@ command_email = 'python3 get_emails.py -c config.yaml'.split(' ')
 
 def job():
     subprocess.run(command_email)
-
+    logger.info('Email downloader was run')
     subprocess.run(command_yolo)
+    logger.info('Predictor was run')
 
     shutil.rmtree('imgs')
-    copy_tree('./inference/img/', './predict/img/')
-    shutil.copy('./inference/objects.csv', './predict/')
-    print('job was run')
+
+    if os.path.exists('inference'):
+        copy_tree('./inference/img/', './predict/img/')
+        shutil.copy('./inference/objects.csv', './predict/')
+    logger.info('Job was run')
 
 #schedule.every().hour.do(job)
 #schedule.every().day.at("10:30").do(job)
