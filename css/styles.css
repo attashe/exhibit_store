@@ -95,13 +95,14 @@ div {
 
 #system_name {
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-    font-size: 30px;
+    font-size: 40px;
     letter-spacing: 2px;
     word-spacing: 2px;
     color: #000000;
-    font-weight: normal;
+    font-weight: bold;
     font-style: normal;
     font-variant: normal;
+    margin-left: -22%;
 }
 
 .carousel-item {
