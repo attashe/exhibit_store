@@ -47,7 +47,7 @@ class DotDict(dict):
 
 @st.cache
 def load_model(imgsz):
-    weights = './runs/exp67/weights/best.pt'
+    weights = '../yolov5/runs/exp80/weights/best.pt'
 
     # Load model
     model = attempt_load(weights, map_location=device)  # load FP32 model
