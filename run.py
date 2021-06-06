@@ -135,6 +135,9 @@ def new_value():
 def get_preview(number):
     path = Path('./predict/img/')
 
+    if len(imgs) < number or not os.path.exists(path / imgs[number]):
+        logger.error(f'Preview {number} does not exist')
+        return ""
     # logger.debug(imgs)
     logger.debug(path / imgs[number])
 

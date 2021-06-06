@@ -157,10 +157,16 @@ def load_emails(store, messages, target_folder='emails'):
                 date = msg['Date']
                 logger.info(f'Date {date} with type {type(date)}')
                 # decode the email subject
-                subject = decode_header(msg["Subject"])[0][0]
+                try:
+                    subject = decode_header(msg["Subject"])[0][0]
+                except Exception as e:
+                    logger.error('Message without header')
                 if isinstance(subject, bytes):
                     # if it's a bytes, decode to str
-                    subject = subject.decode()
+                    try:
+                        subject = subject.decode()
+                    except Exception as e:
+                        subject = subject.decode('windows-1251')
                 # email sender
                 from_ = msg.get("From")
                 print("Subject:", subject)
